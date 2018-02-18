@@ -7,10 +7,9 @@ env:
   - EVM_EMACS=emacs-git-snapshot-travis
 before_install:
   # setup evm
-  - curl -fsSkL https://raw.github.com/rejeep/evm/master/go | bash
-  - export PATH="/home/travis/.evm/bin:$PATH"
-  - evm config path /tmp
+  - curl -fsSkL https://gist.github.com/rejeep/ebcd57c3af83b049833b/raw > x.sh && source ./x.sh
   - evm install $EVM_EMACS --use --skip
+  - cask
   # setup cask
   - curl -fsSkL https://raw.github.com/cask/cask/master/go | python
   - export PATH="/home/travis/.cask/bin:$PATH"
