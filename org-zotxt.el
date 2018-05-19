@@ -51,6 +51,11 @@ prefix argument (C-u C-u) to `org-zotxt-insert-reference-link'"
                  (lambda (c) (list 'const :tag (car c) (cdr c)))
                  zotxt-quicksearch-method-names)))
 
+(defcustom org-zotxt-noter-zotero-link "ZOTERO_LINK"
+  "Default property name for zotero link."
+  :group 'org-zotxt
+  :type 'string)
+
 (defun org-zotxt-extract-link-id-at-point ()
   "Extract the Zotero key of the link at point."
   (let ((ct (org-element-context)))
@@ -252,8 +257,12 @@ If a document path property is found, simply call `org-noter'."
                 (zotxt-get-item-deferred (car item-ids) :paths)))
             (deferred:nextc it
               (lambda (resp)
-                (let ((path (org-zotxt-choose-path (cdr (assq 'paths (plist-get resp :paths))))))
-                  (org-entry-put nil org-noter-property-doc-file path))
+                (let ((path (file-relative-name
+                             (org-zotxt-choose-path (cdr (assq 'paths (plist-get resp :paths))))))
+                      (link (org-make-link-string
+                             (format "zotero://select/items/%s" (plist-get resp :key)))))
+                  (org-entry-put nil org-noter-property-doc-file path)
+                  (org-entry-put nil org-zotxt-noter-zotero-link link))
                 (org-noter arg)))))))))
 
 ;;;###autoload
