@@ -258,7 +258,9 @@ If a document path property is found, simply call `org-noter'."
             (deferred:nextc it
               (lambda (resp)
                 (let ((path (file-relative-name
-                             (org-zotxt-choose-path (cdr (assq 'paths (plist-get resp :paths))))))
+                             (file-truename
+                              (org-zotxt-choose-path (cdr (assq 'paths (plist-get resp :paths)))))
+                             (file-name-directory (buffer-file-name))))
                       (link (org-make-link-string
                              (format "zotero://select/items/%s" (plist-get resp :key)))))
                   (org-entry-put nil org-noter-property-doc-file path)
